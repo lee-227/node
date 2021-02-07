@@ -126,6 +126,29 @@ class Promise {
       }
     })
   }
+  static allSettled(promises) {
+    return new Promise((resolve, reject) => {
+      let res = []
+      let count = 0
+      function getData(index, data) {
+        res[index] = data
+        if (++count === promises.length) {
+          resolve(res)
+        }
+      }
+      for (let index = 0; index < promises.length; index++) {
+        const p = promises[index]
+        if (isPromise(p)) {
+          p.then(
+            (val) => getData(i, val),
+            (err) => getData(i, err)
+          )
+        } else {
+          getData(i, p)
+        }
+      }
+    })
+  }
   finally(cb) {
     return this.then(
       (data) => {
