@@ -52,6 +52,26 @@ class LinkList {
     }
     return arr;
   }
+  reverse() {
+    let node = null;
+    for (let i = 0; i < this.size; i++) {
+      let nextNode = this.head.next;
+      this.head.next = node;
+      node = this.head;
+      this.head = nextNode;
+    }
+    this.head = node;
+  }
+  dfReverse() {
+    function dfs(node) {
+      if (!node || !node.next) return node;
+      let head = dfs(node.next);
+      node.next.next = node;
+      node.next = null;
+      return head;
+    }
+    this.head = dfs(this.head);
+  }
   getNode(index) {
     let element = this.head;
     for (let i = 0; i < index; i++) {
@@ -68,4 +88,6 @@ let ll = new LinkList();
 ll.add(0, 2);
 ll.add(0, 1);
 ll.add(3);
+ll.dfReverse();
+ll.reverse();
 console.log(ll.print());
