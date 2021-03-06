@@ -1,0 +1,21 @@
+{
+  "name": "lee-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "ls": "./bin/www.js",
+    "lee-server": "./bin/www.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.1.0",
+    "ejs": "^3.1.6",
+    "mime": "^2.5.2"
+  }
+}
