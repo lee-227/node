@@ -77,7 +77,7 @@ color-name@~1.1.4:
 
 commander@^7.1.0:
   version "7.1.0"
-  resolved "https://registry.npm.taobao.org/commander/download/commander-7.1.0.tgz#f2eaecf131f10e36e07d894698226e36ae0eb5ff"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-7.1.0.tgz?cache=0&sync_timestamp=1613373913701&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-7.1.0.tgz#f2eaecf131f10e36e07d894698226e36ae0eb5ff"
   integrity sha1-8urs8THxDjbgfYlGmCJuNq4Otf8=
 
 concat-map@0.0.1:

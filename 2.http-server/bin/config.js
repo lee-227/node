@@ -10,5 +10,5 @@ module.exports = {
     descriptor: "set your server start directory",
     usage: "ls --directory D:",
     default: process.cwd(),
-  },
+  }
 };

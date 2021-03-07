@@ -3,9 +3,9 @@
 const program = require("commander");
 const config = require("./config");
 const { forEachObj } = require("../utils");
-program.name = "lee-serve";
-forEachObj(config, (key, value) => {
-  program.option(value.option, val.descriptor);
+program.name('lee-serve');
+forEachObj(config, (key, val) => {
+  program.option(val.option, val.descriptor);
 });
 program.on("--help", function () {
   console.log("\r\nExamples:");
