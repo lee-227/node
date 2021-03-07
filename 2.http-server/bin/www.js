@@ -16,7 +16,7 @@ program.on("--help", function () {
 program.parse(process.argv);
 const finalConfig = {};
 forEachObj(config, (key, val) => {
-  finalConfig[key] = program[key] || val.default;
+  finalConfig[key] = program.opts()[key] || val.default;
 });
 const Server = require("../src/index");
 let server = new Server(finalConfig);
