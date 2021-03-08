@@ -9,6 +9,7 @@ function sign(val) {
     .replace(/\/|\=|\+/g, "");
 }
 const server = http.createServer((req, res) => {
+  let cookies = [];
   res.setCookie = function (key, value, options = {}) {
     let opts = [];
     if (options.maxAge) {
@@ -23,7 +24,8 @@ const server = http.createServer((req, res) => {
     if (options.sign) {
       value = value + "." + sign(value);
     }
-    res.setHeader("Set-Cookie", [`${key}=${value}; ${opts.join("; ")}`]);
+    cookies.push(`${key}=${value}; ${opts.join("; ")}`);
+    res.setHeader("Set-Cookie", cookies);
   };
   req.getCookie = function (key, options = {}) {
     let result = querystring.parse(req.headers.cookie, "; ", "=");
