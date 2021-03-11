@@ -12,7 +12,7 @@ app.get(
   "/",
   (req, res, next) => {
     console.log(1);
-    next();
+    next("errrr");
   },
   (req, res, next) => {
     console.log(1);
@@ -28,10 +28,11 @@ app.get(
   }
 );
 app.get(
-  "/user",
+  "/user/:id/:name",
   (req, res, next) => {
     console.log(2);
-    next();
+    res.end(JSON.stringify(req.params));
+    // next();
   },
   (req, res, next) => {
     console.log(2);
@@ -46,6 +47,10 @@ app.get(
     next();
   }
 );
+app.use((err, req, res, next) => {
+  console.log(1);
+  res.end(err);
+});
 app.listen(8888, () => {
   console.log(`Start server on port 8888`);
 });

@@ -22,21 +22,34 @@ Router.prototype.handle = function (req, res, out) {
   let { pathname } = url.parse(req.url);
   let requestMethod = req.method.toLowerCase();
   let idx = 0;
-  let next = () => {
+  let next = (err) => {
     if (idx === this.stack.length) return out();
     let layer = this.stack[idx++];
-    if (layer.match(pathname)) {
-      if (layer.route) {
-        if (layer.route.match_method(requestMethod)) {
-          layer.handle_request(req, res, next);
-        } else {
-          next();
-        }
+    if (err) {
+      if (!layer.route) {
+        layer.handle_error(err, req, res, next);
       } else {
-        layer.handle_request(req, res, next);
+        next(err);
       }
     } else {
-      next();
+      if (layer.match(pathname)) {
+        req.params = layer.params;
+        if (layer.route) {
+          if (layer.route.match_method(requestMethod)) {
+            layer.handle_request(req, res, next);
+          } else {
+            next();
+          }
+        } else {
+          if (layer.handler.length != 4) {
+            layer.handle_request(req, res, next);
+          } else {
+            next();
+          }
+        }
+      } else {
+        next();
+      }
     }
   };
   next();
