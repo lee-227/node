@@ -3,26 +3,37 @@ const Route = require("./route");
 const Layer = require("./layer");
 const url = require("url");
 function Router() {
-  this.stack = [];
+  let router = (req, res, next) => {
+    router.handle(req, res, next);
+  };
+  router.stack = [];
+  router.__proto__ = proto;
+  return router;
 }
+let proto = {};
 methods.forEach((method) => {
-  Router.prototype[method] = function (path, handlers) {
+  proto[method] = function (path, handlers) {
     let route = this.route(path);
     route[method](handlers);
   };
 });
-Router.prototype.route = function (path) {
+proto.route = function (path) {
   let route = new Route();
   let layer = new Layer(path, route.dispatch.bind(route));
   layer.route = route;
   this.stack.push(layer);
   return route;
 };
-Router.prototype.handle = function (req, res, out) {
+proto.handle = function (req, res, out) {
   let { pathname } = url.parse(req.url);
   let requestMethod = req.method.toLowerCase();
   let idx = 0;
+  let remove = "";
   let next = (err) => {
+    if (remove) {
+      req.url = remove + pathname;
+      remove = "";
+    }
     if (idx === this.stack.length) return out();
     let layer = this.stack[idx++];
     if (err) {
@@ -42,6 +53,10 @@ Router.prototype.handle = function (req, res, out) {
           }
         } else {
           if (layer.handler.length != 4) {
+            if (layer.path !== "/") {
+              remove = layer.path;
+              req.url = pathname.slice(remove.length);
+            }
             layer.handle_request(req, res, next);
           } else {
             next();
@@ -54,7 +69,7 @@ Router.prototype.handle = function (req, res, out) {
   };
   next();
 };
-Router.prototype.use = function (path, handler) {
+proto.use = function (path, handler) {
   if (typeof path === "function") {
     handler = path;
     path = "/";

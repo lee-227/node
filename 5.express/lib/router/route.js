@@ -9,6 +9,7 @@ Route.prototype.match_method = function (method) {
 };
 methods.forEach((method) => {
   Route.prototype[method] = function (handlers) {
+    if (!Array.isArray(handlers)) handlers = [handlers];
     handlers.forEach((handler) => {
       const layer = new Layer("", handler);
       layer.method = method;
