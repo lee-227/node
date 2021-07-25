@@ -1,4 +1,4 @@
-const LinkList = require("../../9.LinkList");
+const LinkList = require("./LinkList");
 class Queue {
   constructor() {
     this.ll = new LinkList();
