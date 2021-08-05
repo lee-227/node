@@ -62,6 +62,6 @@ app.post("/", async (req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(500).json({ code: 0, msg: err.message });
 });
-app.listen(8888, () => {
+app.listen(8888, "0.0.0.0", () => {
   console.log("http://localhost:8888");
 });
