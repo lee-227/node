@@ -47,6 +47,18 @@ exports.register = async (req, res, next) => {
   }
 };
 
+// 获取用户
+exports.getUser = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    res.status(200).json({
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // 获取当前登录用户
 exports.getCurrentUser = async (req, res, next) => {
   try {

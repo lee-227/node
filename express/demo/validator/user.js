@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const validate = require("../middleware/validate");
 const { User } = require("../model");
 const md5 = require("../util/md5");
@@ -60,3 +60,14 @@ exports.login = [
     }),
   ]),
 ];
+exports.getUser = validate([
+  param("username")
+    .notEmpty()
+    .withMessage("用户名不能为空")
+    .custom(async (username) => {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return Promise.reject("用户名不存在");
+      }
+    }),
+]);
