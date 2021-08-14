@@ -16,7 +16,7 @@ app.use("/api", router);
 
 app.use(errorHandler());
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(process.env.NODE_ENV);
   console.log("http://localhost:" + PORT);
 });
