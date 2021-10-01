@@ -7,13 +7,14 @@ const mime = require('mime')
 const ejs = require('ejs')
 const { createReadStream, readFileSync } = require('fs')
 const crypto = require('crypto')
+const zlib = require('zlib')
 class Server {
   constructor({ port, directory }) {
     this.port = port
     this.directory = directory
     this.template = readFileSync(
       path.resolve(__dirname, './index.html'),
-      'utf-8'
+      'utf-8',
     )
   }
   async handelRequest(req, res) {
@@ -52,10 +53,25 @@ class Server {
 
     res.setHeader('Last-Modified', ctime)
     res.setHeader('Etag', etag)
-    
+
     if (ifModifiedSince !== ctime) return false
     if (ifNoneMatch !== etag) return false
     return true
+  }
+  zip(req, res, stream) {
+    let acceptEncoding = req.headers['accept-encoding']
+    if (!acceptEncoding) {
+      acceptEncoding = ''
+    }
+    if (acceptEncoding.match(/\bdeflate\b/)) {
+      res.setHeader('Content-Encoding', 'deflate')
+      return stream.pipe(zlib.createDeflate())
+    } else if (acceptEncoding.match(/\bgzip\b/)) {
+      res.setHeader('Content-Encoding', 'gzip')
+      return stream.pipe(zlib.createGzip())
+    } else {
+      return stream
+    }
   }
   sendFile(req, res, statObj, filePath) {
     if (this.cache(req, res, statObj, filePath)) {
@@ -63,7 +79,9 @@ class Server {
       return res.end()
     }
     res.setHeader('Content-Type', mime.getType(filePath) + ';chartset=utf-8')
-    createReadStream(filePath).pipe(res)
+    let stream = createReadStream(filePath)
+    stream = this.zip(req, res, stream)
+    stream.pipe(res)
   }
   sendError(res) {
     res.statusCode = 404
@@ -75,8 +93,8 @@ class Server {
       console.log(
         `${chalk.yellow('Server start at')} ./${path.relative(
           process.cwd(),
-          this.directory
-        )}`
+          this.directory,
+        )}`,
       )
       console.log(`  http://localhost:${chalk.green(this.port)}`)
     })

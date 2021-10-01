@@ -10,7 +10,7 @@ module.exports = app => {
   router.prefix('/api');
   router.get('/', controller.home.index);
   router
-    .post('/users', controller.user.create) // 用户注册
+    .post('/users', 'user.create') // 用户注册
     .post('/users/login', controller.user.login) // 用户登录
     .get('/user', auth, controller.user.getCurrentUser) // 获取当前登录用户
     .patch('/user', auth, controller.user.update) // 更新当前登录用户
